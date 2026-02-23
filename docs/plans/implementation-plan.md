@@ -117,7 +117,7 @@ tests/
 
 ---
 
-### Phase 1: 型定義の実装（TDD）
+### Phase 1: 型定義の実装（TDD）　→　完了
 
 #### Step 1-1: [RED] 型ガードのテストを書く
 
@@ -147,7 +147,7 @@ tests/
 
 ---
 
-### Phase 2: 定数定義
+### Phase 2: 定数定義　→　完了
 
 #### Step 2-1: URL 定数の実装
 
@@ -163,7 +163,7 @@ tests/
 
 ---
 
-### Phase 3: レートリミッターの実装（TDD）
+### Phase 3: レートリミッターの実装（TDD）　→　完了
 
 #### Step 3-1: [RED] レートリミッターのテストを書く
 
@@ -200,7 +200,7 @@ tests/
 
 ---
 
-### Phase 4: ROR API クライアントの実装（TDD）
+### Phase 4: ROR API クライアントの実装（TDD）　→　完了
 
 #### Step 4-1: [RED] ヘルスチェックのテストを書く（4.1）
 
@@ -301,7 +301,7 @@ tests/
 
 ---
 
-### Phase 5: バレルエクスポートとビルド確認
+### Phase 5: バレルエクスポートとビルド確認　→　完了
 
 #### Step 5-1: `index.ts` の作成
 
@@ -326,7 +326,7 @@ tests/
 
 ---
 
-### Phase 6: セキュリティチェック
+### Phase 6: セキュリティチェック　→　完了
 
 - **Action**: `~/.claude/rules/security.md` のチェックリストに従い、以下を確認する
   - ハードコードされたシークレットがないこと（`Client-Id` は環境変数またはコンストラクタ引数で受け取る）
@@ -359,12 +359,12 @@ tests/
 
 ## Success Criteria
 
-- [ ] `npm run test` が全テスト PASS（RED → GREEN 確認済み）
-- [ ] `npm run test:coverage` でカバレッジが 80% 以上
-- [ ] `npm run build` が成功し `dist/` にコンパイル済みファイルが生成される
-- [ ] `npm run type-check` がエラーなし
-- [ ] `npm run lint` がエラーなし
-- [ ] 全 API メソッドが `RorOrganization` 型で型安全に動作する
-- [ ] セキュリティチェックリストをすべてクリア
-- [ ] `Client-Id` ヘッダーが全リクエストに付与される
-- [ ] レートリミット（400 req/min）が正しく機能する
+- [x] `npm run test` が全テスト PASS（RED → GREEN 確認済み）
+- [x] `npm run test:coverage` でカバレッジが 80% 以上
+- [x] `npm run build` が成功し `dist/` にコンパイル済みファイルが生成される
+- [x] `npm run type-check` がエラーなし
+- [x] `npm run lint` がエラーなし
+- [x] 全 API メソッドが `RorOrganization` 型で型安全に動作する
+- [x] セキュリティチェックリストをすべてクリア
+- [x] `Client-Id` ヘッダーが全リクエストに付与される
+- [x] レートリミット（400 req/min）が正しく機能する
