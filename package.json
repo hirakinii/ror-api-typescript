@@ -4,7 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "build": "tsc",
+    "lint": "eslint src tests",
+    "format": "prettier --write src tests",
+    "type-check": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
@@ -13,7 +19,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/hirakinii/ror-api-typescript/issues"
   },
@@ -21,11 +27,16 @@
   "devDependencies": {
     "@types/node": "^25.3.0",
     "@typescript-eslint/eslint-plugin": "^8.56.0",
+    "@vitest/coverage-v8": "^4.0.18",
     "eslint": "^10.0.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
     "prettier": "^3.8.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  },
+  "dependencies": {
+    "zod": "^4.3.6"
   }
 }
