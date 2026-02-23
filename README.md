@@ -1,7 +1,8 @@
 # ROR API v2 TypeScript Client
 
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue.svg)](https://www.typescriptlang.org/)
+[![npm version](https://badge.fury.io/js/@hirakinii-packages%2Fror-api-typescript.svg)](https://badge.fury.io/js/@hirakinii-packages%2Fror-api-typescript)
 [![CI](https://github.com/hirakinii/ror-api-typescript/actions/workflows/ci.yml/badge.svg)](https://github.com/hirakinii/ror-api-typescript/actions/workflows/ci.yml)
-[![npm version](https://badge.fury.io/js/ror-api-typescript.svg)](https://www.npmjs.com/package/ror-api-typescript)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 A robust, type-safe TypeScript client library for interacting with the Research Organization Registry (ROR) REST API (v2).
