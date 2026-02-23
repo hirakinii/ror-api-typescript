@@ -54,7 +54,7 @@ tests/
 
 ## Implementation Steps
 
-### Phase 0: プロジェクトセットアップ
+### Phase 0: プロジェクトセットアップ　→　完了
 
 #### Step 0-1: テストフレームワーク・依存関係のインストール
 
