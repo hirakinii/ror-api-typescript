@@ -91,7 +91,7 @@ export class RorClient {
    */
   private buildFilterString(filters: FilterParams): string {
     return Object.entries(filters)
-      .map(([key, value]) => `${key}:${value}`)
+      .map(([key, value]) => `${key}:${encodeURIComponent(value)}`)
       .join(',');
   }
 

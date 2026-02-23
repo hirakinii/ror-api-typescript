@@ -195,4 +195,45 @@ describe('RorClient', () => {
       expect(result).toEqual([mockOrg]);
     });
   });
+
+  // Phase 6: Security tests
+  describe('URL injection prevention', () => {
+    it('encodes special characters in rorId to prevent path injection', async () => {
+      const fetchMock = makeFetchMock(200, mockOrg);
+      vi.stubGlobal('fetch', fetchMock);
+      const client = new RorClient();
+
+      await client.getOrganizationById('../../../etc/passwd');
+      const calledUrl = fetchMock.mock.calls[0][0] as string;
+
+      expect(calledUrl).not.toContain('../');
+      expect(calledUrl).toContain('%2F');
+    });
+
+    it('encodes special characters in query to prevent injection', async () => {
+      const fetchMock = makeFetchMock(200, mockListResponse);
+      vi.stubGlobal('fetch', fetchMock);
+      const client = new RorClient();
+
+      await client.searchOrganizations('test&injected=true');
+      const calledUrl = fetchMock.mock.calls[0][0] as string;
+
+      // Raw & must not appear in the query value (would split the query string)
+      expect(calledUrl).not.toContain('query=test&');
+      expect(calledUrl).toContain('%26');
+    });
+
+    it('encodes special characters in filter values to prevent injection', async () => {
+      const fetchMock = makeFetchMock(200, mockListResponse);
+      vi.stubGlobal('fetch', fetchMock);
+      const client = new RorClient();
+
+      await client.filterOrganizations({ status: 'active&injected=true' });
+      const calledUrl = fetchMock.mock.calls[0][0] as string;
+
+      // Raw & must not appear after the filter key:value pair
+      expect(calledUrl).not.toContain('status:active&');
+      expect(calledUrl).toContain('%26');
+    });
+  });
 });
