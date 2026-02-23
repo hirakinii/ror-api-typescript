@@ -1,16 +1,30 @@
 {
-  "name": "ror-api-typescript",
+  "name": "@hirakinii-packages/ror-api-typescript",
   "version": "0.1.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Type-safe TypeScript client for the Research Organization Registry (ROR) REST API v2",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "build": "tsc",
-    "lint": "eslint '{src,tests}/**/*.ts'",
-    "format": "prettier --write '{src,tests}/**/*.ts'",
-    "type-check": "tsc --noEmit"
+    "lint": "eslint '{src,tests,examples}/**/*.ts'",
+    "format": "prettier --write '{src,tests,examples}/**/*.ts'",
+    "type-check": "tsc --noEmit",
+    "prepublishOnly": "npm run lint && npm run type-check && npm run test && npm run build"
   },
   "repository": {
     "type": "git",
