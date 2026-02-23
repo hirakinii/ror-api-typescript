@@ -8,8 +8,8 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "build": "tsc",
-    "lint": "eslint '{src,tests}/**/*.ts'",
-    "format": "prettier --write '{src,tests}/**/*.ts'",
+    "lint": "eslint '{src,tests,examples}/**/*.ts'",
+    "format": "prettier --write '{src,tests,examples}/**/*.ts'",
     "type-check": "tsc --noEmit"
   },
   "repository": {
