@@ -1,31 +1,44 @@
 {
   "name": "ror-api-typescript",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "build": "tsc",
+    "lint": "eslint '{src,tests}/**/*.ts'",
+    "format": "prettier --write '{src,tests}/**/*.ts'",
+    "type-check": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hirakinii/ror-api-typescript.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
+  "author": "hirakinii & Claude",
+  "license": "MIT",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/hirakinii/ror-api-typescript/issues"
   },
   "homepage": "https://github.com/hirakinii/ror-api-typescript#readme",
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/node": "^25.3.0",
     "@typescript-eslint/eslint-plugin": "^8.56.0",
+    "@vitest/coverage-v8": "^4.0.18",
     "eslint": "^10.0.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
+    "globals": "^17.3.0",
     "prettier": "^3.8.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  },
+  "dependencies": {
+    "zod": "^4.3.6"
   }
 }

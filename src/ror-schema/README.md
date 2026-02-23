@@ -4,5 +4,5 @@ JSON Schema document used for generating and validating ROR records. This client
 
 ## Reference
 
-* Original schema repository: <https://github.com/ror-community/ror-schema>
-* Data structure: <https://ror.readme.io/docs/ror-data-structure>
+- Original schema repository: <https://github.com/ror-community/ror-schema>
+- Data structure: <https://ror.readme.io/docs/ror-data-structure>
