@@ -1,6 +1,6 @@
 {
   "name": "@hirakinii-packages/ror-api-typescript",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Type-safe TypeScript client for the Research Organization Registry (ROR) REST API v2",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
