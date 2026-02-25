@@ -52,7 +52,7 @@ async function getById(): Promise<void> {
 // 4. Search organizations by keyword
 // ---------------------------------------------------------------------------
 async function searchByKeyword(): Promise<void> {
-  const results = await client.searchOrganizations('Harvard');
+  const results = await client.searchOrganizations('国立情報学研究所');
   console.log(`Search results for "Harvard": ${results.length} organizations`);
   for (const org of results.slice(0, 3)) {
     console.log(' -', org.id, org.names[0]?.value);
