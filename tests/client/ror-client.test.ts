@@ -236,4 +236,163 @@ describe('RorClient', () => {
       expect(calledUrl).toContain('%26');
     });
   });
+
+  // apiRoot option: route requests through a proxy or alternative API root
+  describe('apiRoot option', () => {
+    const PROXY_ROOT = '/ror-api';
+
+    function calledUrlOf(fetchMock: ReturnType<typeof makeFetchMock>): string {
+      return fetchMock.mock.calls[0][0] as string;
+    }
+
+    it('sends checkHealth() to {apiRoot}/heartbeat', async () => {
+      const fetchMock = makeFetchMock(200, 'OK');
+      vi.stubGlobal('fetch', fetchMock);
+      const client = new RorClient({ apiRoot: PROXY_ROOT });
+
+      await client.checkHealth();
+
+      expect(calledUrlOf(fetchMock)).toBe('/ror-api/heartbeat');
+    });
+
+    it('sends listOrganizations() to {apiRoot}/v2/organizations', async () => {
+      const fetchMock = makeFetchMock(200, mockListResponse);
+      vi.stubGlobal('fetch', fetchMock);
+      const client = new RorClient({ apiRoot: PROXY_ROOT });
+
+      await client.listOrganizations();
+
+      expect(calledUrlOf(fetchMock)).toBe('/ror-api/v2/organizations');
+    });
+
+    it('sends getOrganizationById() to {apiRoot}/v2/organizations/{encoded id}', async () => {
+      const fetchMock = makeFetchMock(200, mockOrg);
+      vi.stubGlobal('fetch', fetchMock);
+      const client = new RorClient({ apiRoot: PROXY_ROOT });
+
+      await client.getOrganizationById('01q15rk86');
+      await client.getOrganizationById('a/b');
+
+      expect(fetchMock.mock.calls[0][0]).toBe('/ror-api/v2/organizations/01q15rk86');
+      expect(fetchMock.mock.calls[1][0]).toBe('/ror-api/v2/organizations/a%2Fb');
+    });
+
+    it('sends filterOrganizations() to {apiRoot}/v2/organizations?filter=...', async () => {
+      const fetchMock = makeFetchMock(200, mockListResponse);
+      vi.stubGlobal('fetch', fetchMock);
+      const client = new RorClient({ apiRoot: PROXY_ROOT });
+
+      await client.filterOrganizations({ status: 'active' });
+
+      expect(calledUrlOf(fetchMock)).toBe('/ror-api/v2/organizations?filter=status:active');
+    });
+
+    it('sends searchOrganizations() to {apiRoot}/v2/organizations?query=...', async () => {
+      const fetchMock = makeFetchMock(200, mockListResponse);
+      vi.stubGlobal('fetch', fetchMock);
+      const client = new RorClient({ apiRoot: PROXY_ROOT });
+
+      await client.searchOrganizations('university');
+
+      expect(calledUrlOf(fetchMock)).toBe('/ror-api/v2/organizations?query=university');
+    });
+
+    it('sends searchAndFilter() to {apiRoot}/v2/organizations?query=...&filter=...', async () => {
+      const fetchMock = makeFetchMock(200, mockListResponse);
+      vi.stubGlobal('fetch', fetchMock);
+      const client = new RorClient({ apiRoot: PROXY_ROOT });
+
+      await client.searchAndFilter('university', { status: 'active' });
+
+      expect(calledUrlOf(fetchMock)).toBe('/ror-api/v2/organizations?query=university&filter=status:active');
+    });
+
+    it('keeps the path prefix of an absolute apiRoot', async () => {
+      const fetchMock = makeFetchMock(200, 'OK');
+      vi.stubGlobal('fetch', fetchMock);
+      const client = new RorClient({ apiRoot: 'https://proxy.example.com/ror' });
+
+      await client.checkHealth();
+      await client.listOrganizations();
+
+      expect(fetchMock.mock.calls[0][0]).toBe('https://proxy.example.com/ror/heartbeat');
+      expect(fetchMock.mock.calls[1][0]).toBe('https://proxy.example.com/ror/v2/organizations');
+    });
+
+    it.each(['/ror-api/', '/ror-api//'])(
+      'does not produce a double slash when apiRoot has trailing slashes (%j)',
+      async (apiRoot) => {
+        const fetchMock = makeFetchMock(200, mockListResponse);
+        vi.stubGlobal('fetch', fetchMock);
+        const client = new RorClient({ apiRoot });
+
+        await client.listOrganizations();
+
+        expect(calledUrlOf(fetchMock)).toBe('/ror-api/v2/organizations');
+      },
+    );
+
+    it('resolves apiRoot "/" to same-origin root paths', async () => {
+      const fetchMock = makeFetchMock(200, 'OK');
+      vi.stubGlobal('fetch', fetchMock);
+      const client = new RorClient({ apiRoot: '/' });
+
+      await client.checkHealth();
+      await client.listOrganizations();
+
+      expect(fetchMock.mock.calls[0][0]).toBe('/heartbeat');
+      expect(fetchMock.mock.calls[1][0]).toBe('/v2/organizations');
+    });
+
+    it('uses BASE_URL and HEALTH_CHECK_URL when apiRoot is omitted', async () => {
+      const fetchMock = makeFetchMock(200, mockListResponse);
+      vi.stubGlobal('fetch', fetchMock);
+      const client = new RorClient({ clientId: 'my-app' });
+
+      await client.checkHealth();
+      await client.listOrganizations();
+
+      expect(fetchMock.mock.calls[0][0]).toBe(HEALTH_CHECK_URL);
+      expect(fetchMock.mock.calls[1][0]).toBe(BASE_URL);
+    });
+
+    it('still sends the Client-Id header when apiRoot is set', async () => {
+      const fetchMock = makeFetchMock(200, mockListResponse);
+      vi.stubGlobal('fetch', fetchMock);
+      const client = new RorClient({ clientId: 'dmp-editor', apiRoot: PROXY_ROOT });
+
+      await client.listOrganizations();
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        '/ror-api/v2/organizations',
+        expect.objectContaining({
+          method: 'GET',
+          headers: expect.objectContaining({ 'Client-Id': 'dmp-editor' }),
+        }),
+      );
+    });
+
+    it('includes the resolved URL in the error message on a non-2xx response', async () => {
+      vi.stubGlobal('fetch', makeFetchMock(404, { errors: ['Not found'] }));
+      const client = new RorClient({ apiRoot: PROXY_ROOT });
+
+      await expect(client.getOrganizationById('xxx')).rejects.toThrow(
+        'HTTP 404: request failed for /ror-api/v2/organizations/xxx',
+      );
+    });
+
+    it('propagates network errors when apiRoot is set', async () => {
+      vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('Failed to fetch')));
+      const client = new RorClient({ apiRoot: PROXY_ROOT });
+
+      await expect(client.checkHealth()).rejects.toThrow('Failed to fetch');
+    });
+
+    it.each(['', '   ', 'https://api.ror.org?a=b', '/ror-api#frag'])(
+      'throws from the constructor for an invalid apiRoot (%j)',
+      (apiRoot) => {
+        expect(() => new RorClient({ apiRoot })).toThrow(/apiRoot/);
+      },
+    );
+  });
 });

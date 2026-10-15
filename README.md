@@ -21,6 +21,7 @@ This library provides an easy-to-use interface for searching and retrieving rese
 6. **Combined Search**: Combine keyword and filter searches.
 7. **Client-Id Header Support**: Explicitly identify the caller via request headers (a ROR API best practice).
 8. **Rate Limit Control**: Automatic throttling to comply with the API usage limit (400 requests/min).
+9. **Custom API Root**: Route requests through a reverse proxy or an alternative API root (`apiRoot`).
 
 ## Requirements
 
@@ -49,6 +50,35 @@ const client = new RorClient({
   clientId: 'my-research-app/1.0 (mailto:admin@example.com)'
 });
 ```
+
+### Using a Reverse Proxy (`apiRoot`)
+
+By default, requests are sent to `https://api.ror.org`. To route them through your own reverse proxy (for example, so that browsers never contact the ROR API directly), pass the proxy's API root as `apiRoot`:
+
+```typescript
+const client = new RorClient({
+  clientId: 'my-research-app/1.0',
+  apiRoot: '/ror-api', // requests go to /ror-api/v2/organizations, /ror-api/heartbeat
+});
+```
+
+A matching nginx configuration might look like this:
+
+```nginx
+location /ror-api/ {
+    proxy_pass https://api.ror.org/;
+    proxy_set_header Host api.ror.org;
+    proxy_ssl_server_name on;
+}
+```
+
+Notes:
+
+- `apiRoot` is the API **root**, not an endpoint URL. Endpoint paths such as `/v2/organizations` and `/heartbeat` are appended to it.
+- Surrounding whitespace and trailing slashes are removed (`'/ror-api/'` behaves like `'/ror-api'`).
+- An empty value, or a value containing `?` or `#`, throws an `Error` from the constructor.
+- A relative root such as `/ror-api` only works where `fetch` can resolve relative URLs (browsers). In Node.js, use an absolute URL.
+- `apiRoot` is a developer-controlled setting. Never build it from end-user input: the `Client-Id` header and all requests are sent to whatever host it points to.
 
 ### Health Check
 
@@ -121,6 +151,13 @@ results.forEach(org => {
 | `searchOrganizations` | `(query: string) => Promise<RorOrganization[]>` | Returns organizations matching the keyword query |
 | `filterOrganizations` | `(filters: FilterParams) => Promise<RorOrganization[]>` | Returns organizations matching the filter parameters |
 | `searchAndFilter` | `(query: string, filters: FilterParams) => Promise<RorOrganization[]>` | Combines keyword search and filter |
+
+### `RorClientOptions`
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `clientId` | `string` | (none) | Sent as the `Client-Id` request header |
+| `apiRoot` | `string` | `'https://api.ror.org'` (`DEFAULT_API_ROOT`) | Root URL of the ROR API; endpoint paths are appended to it |
 
 ### `FilterParams`
 
