@@ -16,5 +16,18 @@ export function normalizeApiRoot(apiRoot: string): string {
   if (/[?#]/.test(trimmed)) {
     throw new Error('apiRoot must not contain a query string or fragment');
   }
-  return trimmed.replace(/\/+$/, '');
+  return stripTrailingSlashes(trimmed);
+}
+
+/**
+ * Removes all trailing `/` characters in linear time.
+ * A regex such as `/\/+$/` is avoided because it backtracks quadratically on
+ * inputs with long runs of `/` that are not at the end (ReDoS).
+ */
+function stripTrailingSlashes(value: string): string {
+  let end = value.length;
+  while (end > 0 && value[end - 1] === '/') {
+    end -= 1;
+  }
+  return value.slice(0, end);
 }

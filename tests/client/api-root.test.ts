@@ -26,6 +26,22 @@ describe('normalizeApiRoot()', () => {
     expect(normalizeApiRoot('  /ror-api/  ')).toBe('/ror-api');
   });
 
+  it('runs in linear time on many consecutive slashes (no ReDoS)', () => {
+    // A trailing-slash regex such as /\/+$/ backtracks quadratically on this input.
+    const pathological = `/${'/'.repeat(50_000)}x`;
+
+    const startedAt = performance.now();
+    const result = normalizeApiRoot(pathological);
+    const elapsedMs = performance.now() - startedAt;
+
+    expect(result).toBe(pathological);
+    expect(elapsedMs).toBeLessThan(200);
+  });
+
+  it('removes a very long run of trailing slashes', () => {
+    expect(normalizeApiRoot(`/ror-api${'/'.repeat(50_000)}`)).toBe('/ror-api');
+  });
+
   it.each(['', '   ', '\t\n'])('throws for an empty or whitespace-only value (%j)', (value) => {
     expect(() => normalizeApiRoot(value)).toThrow(/apiRoot/);
   });

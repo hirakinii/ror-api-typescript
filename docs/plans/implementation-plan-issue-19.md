@@ -55,7 +55,7 @@ export const HEALTH_CHECK_URL = 'https://api.ror.org/heartbeat' as const;
 1. `trim()` する
 2. 空文字なら `Error` を投げる
 3. `?` または `#` を含む場合は `Error` を投げる。そのまま連結すると URL が壊れるため
-4. `replace(/\/+$/, '')` で末尾のスラッシュを除去する
+4. 末尾から走査するループで、末尾のスラッシュを除去する（正規表現は使わない。下記「Security Considerations」を参照）
 
 ### `RorClient`
 
@@ -150,7 +150,8 @@ export const HEALTH_CHECK_URL = 'https://api.ror.org/heartbeat' as const;
 
 - `apiRoot` は開発者が設定する値です。エンドユーザーの入力を渡すと、リクエストを任意のホストへ誘導できてしまいます。README に明記します
 - `Client-Id` ヘッダは `apiRoot` が指すホストへ送られます。信頼できるプロキシだけを指定してください
-- `rorId`、`query`、`filter` の `encodeURIComponent` によるエンコードは維持します。正規化に使う正規表現 `/\/+$/` には ReDoS の懸念はありません
+- `rorId`、`query`、`filter` の `encodeURIComponent` によるエンコードは維持します
+- 当初は末尾のスラッシュの除去に正規表現 `/\/+$/` を使う予定でしたが、CodeQL が ReDoS（high）として検出しました。`/` が大量に続いた後に別の文字がある入力では、処理時間が入力長の 2 乗に比例します（50,000 文字で約 1.2 秒）。そこで、末尾から走査する線形時間のループに置き換え、回帰テストを追加しました
 - 秘密情報は追加しません。エラーメッセージに含めるのは URL だけで、ヘッダの値は含めません
 
 ## Risks
