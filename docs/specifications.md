@@ -8,8 +8,30 @@
 
 クライアント内で使用する基準となる URL は以下の通りです。
 
-* **BASE_URL**: `https://api.ror.org/v2/organizations`
-* **HEALTH_CHECK_URL**: `https://api.ror.org/heartbeat`
+* **DEFAULT_API_ROOT**: `https://api.ror.org`（`apiRoot` オプションの既定値。公開）
+* **ORGANIZATIONS_PATH**: `/v2/organizations`（内部用）
+* **HEARTBEAT_PATH**: `/heartbeat`（内部用）
+* **BASE_URL**: `https://api.ror.org/v2/organizations`（後方互換のための公開定数。`DEFAULT_API_ROOT` + `ORGANIZATIONS_PATH` と同じ値）
+* **HEALTH_CHECK_URL**: `https://api.ror.org/heartbeat`（後方互換のための公開定数。`DEFAULT_API_ROOT` + `HEARTBEAT_PATH` と同じ値）
+
+### 2.1 接続先の差し替え（`apiRoot` オプション）
+
+`RorClientOptions.apiRoot` で API ルートを差し替えられます。クライアントは、正規化した API ルートの後ろに `ORGANIZATIONS_PATH` / `HEARTBEAT_PATH` を連結してリクエスト先を決めます。以降の節の `BASE_URL` / `HEALTH_CHECK_URL` は、この連結結果を指します。
+
+正規化の規則は次のとおりです。相対パスを受け付けるため、`new URL()` による検証は行いません。
+
+1. 前後の空白を取り除く
+2. 空文字になる場合は `Error` を投げる
+3. `?` または `#` を含む場合は `Error` を投げる
+4. 末尾のスラッシュをすべて取り除く
+
+| 入力 | 組織エンドポイント |
+|---|---|
+| 未指定 | `https://api.ror.org/v2/organizations` |
+| `'/ror-api'`, `' /ror-api '`, `'/ror-api///'` | `/ror-api/v2/organizations` |
+| `'https://proxy.example.com/ror/'` | `https://proxy.example.com/ror/v2/organizations` |
+| `'/'` | `/v2/organizations` |
+| `''`, `'   '`, `'https://x.example?a=b'`, `'/ror-api#f'` | `Error` |
 
 ## 3. データモデル (TypeScript インターフェース)
 
