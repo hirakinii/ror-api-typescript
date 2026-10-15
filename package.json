@@ -1,6 +1,6 @@
 {
   "name": "@hirakinii-packages/ror-api-typescript",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Type-safe TypeScript client for the Research Organization Registry (ROR) REST API v2",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -14,7 +14,14 @@
     "dist"
   ],
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=24"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "npm",
+      "version": ">=11.19.0 <12",
+      "onFail": "error"
+    }
   },
   "scripts": {
     "test": "vitest run",
@@ -40,7 +47,7 @@
   "homepage": "https://github.com/hirakinii/ror-api-typescript#readme",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/node": "^25.3.0",
+    "@types/node": "^24.19.2",
     "@typescript-eslint/eslint-plugin": "^8.56.0",
     "@vitest/coverage-v8": "^4.0.18",
     "eslint": "^10.0.1",
