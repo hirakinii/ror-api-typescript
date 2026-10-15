@@ -22,6 +22,10 @@ This library provides an easy-to-use interface for searching and retrieving rese
 7. **Client-Id Header Support**: Explicitly identify the caller via request headers (a ROR API best practice).
 8. **Rate Limit Control**: Automatic throttling to comply with the API usage limit (400 requests/min).
 
+## Requirements
+
+- Node.js 24 or later
+
 ## Installation
 
 ```bash
