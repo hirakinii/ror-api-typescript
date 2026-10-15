@@ -10,8 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - **BREAKING**: Raised the minimum supported Node.js version to 24 (`engines.node: ">=24"`). Node.js 18 and 20 have reached end-of-life, and the dev toolchain (vitest 4, eslint 10) no longer supports Node.js 18.
-- Added `.nvmrc` (`24`) to pin the development Node.js version.
-- CI now runs on Node.js 24.x only.
+- Added `.nvmrc` (`24.21.0`) to pin the development Node.js version. CI and CD now read it via `node-version-file`.
+- Added `devEngines.packageManager` (npm `>=11.19.0 <12`) so that installing with an older npm fails instead of silently rewriting `package-lock.json`.
 - Aligned `@types/node` with the Node.js 24 line.
 
 ## [0.1.2] - 2026-02-26

@@ -16,6 +16,13 @@
   "engines": {
     "node": ">=24"
   },
+  "devEngines": {
+    "packageManager": {
+      "name": "npm",
+      "version": ">=11.19.0 <12",
+      "onFail": "error"
+    }
+  },
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
