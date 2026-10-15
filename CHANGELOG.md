@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-15
+
 ### Added
 
 - `apiRoot` option in `RorClientOptions` to change the ROR API root (default: `https://api.ror.org`). Endpoint paths are appended to it, which allows routing requests through a reverse proxy such as `/ror-api`. Trailing slashes are removed; an empty value or one containing `?` / `#` throws an `Error`.
@@ -52,7 +54,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CI workflow (GitHub Actions) — lint, type-check, test, and build on Node.js 20/22/24
 - CD workflow (GitHub Actions) — automatic publish to npm on `v*` tags
 
-[Unreleased]: https://github.com/hirakinii/ror-api-typescript/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/hirakinii/ror-api-typescript/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/hirakinii/ror-api-typescript/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/hirakinii/ror-api-typescript/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/hirakinii/ror-api-typescript/compare/0.1.0...v0.1.1
 [0.1.0]: https://github.com/hirakinii/ror-api-typescript/releases/tag/0.1.0
